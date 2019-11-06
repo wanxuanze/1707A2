@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.mapper.GoodsMapper">
+
+	<select id="getGoodsList" resultType="com.bw.entity.Goods" parameterType="map">
+			select g.gid,g.gname,g.price,g.gename,g.size,g.introduce,g.picurl,c1.cname cname1,c2.cname cname2
+		 from goods g,category c1,category c2 where g.cid1=c1.cid and g.cid2=c2.cid
+		  <if test="ziduan!='' and ziduan!=null and order!='' and order!=null">
+		 	 order by ${ziduan} ${order} 
+		 </if>
+		
+	</select>
+	
+	<delete id="deleteAll">
+			delete from goods where gid in
+			<foreach collection="list" open="(" close=")" item="l" separator=",">
+			#{l}
+			</foreach>
+	</delete>
+	
+	<insert id="addGoods" parameterType="com.bw.entity.Goods">
+			insert goods(gname,price,gename,size,introduce,picurl,cid1,cid2) values (#{gname},#{price},#{gename},#{size},#{introduce},#{picurl},#{cid1},#{cid2});
+	</insert>
+	
+	<select id="getGoodsByGid" parameterType="int" resultType="com.bw.entity.Goods">
+			select * from goods where gid=#{0}
+	</select>
+	
+	<update id="updateGoods" parameterType="com.bw.entity.Goods">
+			UPDATE goods SET gname=#{gname}, price=#{price}, gename=#{gename}, introduce=#{introduce}, cid1=#{cid1}, cid2=#{cid2},picurl=#{picurl} WHERE gid=#{gid}
+	</update>
+
+</mapper>
